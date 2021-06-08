@@ -1,3 +1,5 @@
+**Note: modified version for compiling with emcc. Contains two additional APIs: pack() and unpack() for calling from within javascript.**
+
 apultra -- a new, opensource optimal compressor for the aPLib format
 ====================================================================
 
