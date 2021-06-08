@@ -1,13 +1,14 @@
-CC=clang
-CFLAGS=-O3 -g -fomit-frame-pointer -Isrc/libdivsufsort/include -Isrc
+
+CC=emcc
+CFLAGS=-O2 -Isrc/libdivsufsort/include -Isrc
 OBJDIR=obj
-LDFLAGS=
+LDFLAGS= -sINITIAL_MEMORY=268435456 -sEXPORTED_RUNTIME_METHODS='["cwrap"]' -sEXPORTED_FUNCTIONS=_pack,_unpack,_malloc,_free
 
 $(OBJDIR)/%.o: src/../%.c
 	@mkdir -p '$(@D)'
 	$(CC) $(CFLAGS) -c $< -o $@
 
-APP := apultra
+APP := apultra.js
 
 OBJS += $(OBJDIR)/src/apultra.o
 OBJS += $(OBJDIR)/src/expand.o
@@ -24,5 +25,4 @@ $(APP): $(OBJS)
 	$(CC) $^ $(LDFLAGS) -o $(APP)
 
 clean:
-	@rm -rf $(APP) $(OBJDIR)
-
+	@rm -rf $(APP) $(OBJDIR) *.wasm

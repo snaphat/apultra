@@ -23,7 +23,7 @@
 /*
  * Uses the libdivsufsort library Copyright (c) 2003-2008 Yuta Mori
  *
- * Inspired by cap by Sven-Åke Dahl. https://github.com/svendahl/cap
+ * Inspired by cap by Sven-ï¿½ke Dahl. https://github.com/svendahl/cap
  * Also inspired by Charles Bloom's compression blog. http://cbloomrants.blogspot.com/
  * With ideas from LZ4 by Yann Collet. https://github.com/lz4/lz4
  * With help and support from spke <zxintrospec@gmail.com>
@@ -222,7 +222,7 @@ static int do_compress(const char *pszInFilename, const char *pszOutFilename, co
       fprintf(stderr, "error opening '%s' for writing\n", pszOutFilename);
       return 100;
    }
-   
+
    fwrite(pCompressedData, 1, nCompressedSize, f_out);
    fclose(f_out);
 
@@ -391,7 +391,7 @@ static int do_decompress(const char *pszInFilename, const char *pszOutFilename, 
       fprintf(stderr, "error opening '%s' for writing\n", pszOutFilename);
       return 100;
    }
-   
+
    fwrite(pDecompressedData + nDictionarySize, 1, nOriginalSize, f_out);
    fclose(f_out);
 
@@ -590,7 +590,7 @@ static void generate_compressible_data(unsigned char *pBuffer, const size_t nBuf
    const int nMatchProbability = (const int)(fMatchProbability * 1023.0f);
 
    srand(nSeed);
-   
+
    if (nBufferSize == 0) return;
    pBuffer[nIndex++] = rand() % nNumLiteralValues;
 
@@ -1228,4 +1228,17 @@ int main(int argc, char **argv) {
    else {
       return 100;
    }
+}
+
+int pack(unsigned char* input, int file_size, unsigned char* output, int window_size) {
+   /* Allocate max compressed size */
+   int csize = apultra_get_max_compressed_size(file_size);
+   int size = apultra_compress(input, output, file_size, csize, 0, window_size, 0, NULL, NULL);
+   return size;
+}
+
+int unpack(unsigned char* input, int file_size, unsigned char* output) {
+   int dsize = apultra_get_max_decompressed_size(input, file_size, 0);
+   int size = apultra_decompress(input, output, file_size, dsize, 0, 0);
+   return size;
 }
